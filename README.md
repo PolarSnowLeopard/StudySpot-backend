@@ -1,6 +1,6 @@
 # 自习室预约系统后端
 
-这是一个基于Flask的自习室预约系统后端API服务。
+这是一个基于 Flask 的自习室预约系统后端 API 服务。
 
 ## 技术栈
 
@@ -8,7 +8,7 @@
 - Flask 2.2.3
 - Flask-SQLAlchemy
 - Flask-JWT-Extended
-- Flask-RESTX (API文档)
+- Flask-RESTX (API 文档)
 - MySQL/SQLite
 
 ## 项目结构
@@ -16,7 +16,6 @@
 ```
 ├── app                     # 应用主目录
 │   ├── api                 # REST API和Swagger文档
-│   ├── controllers         # 控制器层，处理HTTP请求
 │   ├── models              # 数据模型层
 │   ├── schemas             # 数据验证模式
 │   ├── services            # 业务逻辑服务层
@@ -62,28 +61,29 @@ cp .env.example .env
 
 ### 开发环境数据库配置
 
-编辑`.env`文件中的`DATABASE_URL`变量，设置为您的实际MySQL数据库连接信息：
+编辑`.env`文件中的`DATABASE_URL`变量，设置为您的实际 MySQL 数据库连接信息：
 
 ```
 DATABASE_URL=mysql+pymysql://用户名:密码@服务器地址:端口/数据库名
 ```
 
 例如：
+
 ```
 DATABASE_URL=mysql+pymysql://study_admin:secure_password@db.example.com:3306/study_room_dev
 ```
 
 ### 测试环境数据库配置
 
-测试环境默认使用SQLite内存数据库，无需额外配置：
+测试环境默认使用 SQLite 内存数据库，无需额外配置：
 
 ```
 DATABASE_TEST_URL=sqlite:///:memory:
 ```
 
-6. 创建MySQL数据库
+6. 创建 MySQL 数据库
 
-在开发环境的MySQL服务器上创建数据库：
+在开发环境的 MySQL 服务器上创建数据库：
 
 ```sql
 CREATE DATABASE study_room_dev;
@@ -110,6 +110,7 @@ python init_db.py
 ```
 
 这将创建所有必要的表结构并添加以下默认用户：
+
 - 管理员账号: admin / admin123
 - 学生账号: student1 / password123
 
@@ -121,15 +122,15 @@ python init_db.py
 python run.py
 ```
 
-或使用Flask命令：
+或使用 Flask 命令：
 
 ```bash
 flask run
 ```
 
-## API文档
+## API 文档
 
-项目集成了Swagger文档，运行项目后可以通过以下地址访问：
+项目集成了 Swagger 文档，运行项目后可以通过以下地址访问：
 
 ```
 http://localhost:5000/api/docs
@@ -144,9 +145,9 @@ http://localhost:5000/api/docs
 - **请求体**:
   ```json
   {
-    "username": "string",  // 用户名/学号
-    "password": "string",  // 密码
-    "role": "string"       // 角色：student或admin
+    "username": "string", // 用户名/学号
+    "password": "string", // 密码
+    "role": "string" // 角色：student或admin
   }
   ```
 - **响应**:
@@ -178,13 +179,13 @@ http://localhost:5000/api/docs
 
 ## 测试
 
-运行单元测试（使用SQLite内存数据库）：
+运行单元测试（使用 SQLite 内存数据库）：
 
 ```bash
 pytest app/tests/unit
 ```
 
-运行集成测试（使用SQLite内存数据库）：
+运行集成测试（使用 SQLite 内存数据库）：
 
 ```bash
 pytest app/tests/integration
@@ -194,4 +195,4 @@ pytest app/tests/integration
 
 ```bash
 pytest
-``` 
+```
