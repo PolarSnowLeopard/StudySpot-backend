@@ -4,6 +4,7 @@ pymysql.install_as_MySQLdb()
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
 from .models.db import db
+from flask_cors import CORS
 from config import config_by_name
 
 jwt = JWTManager()
@@ -17,11 +18,20 @@ def create_app(config_name='dev'):
     # 初始化扩展
     db.init_app(app)
     jwt.init_app(app)
+
+    # 注册CORS
+    CORS(app, resources={r"/*": {"origins": "*"}})
     
     # 初始化Restx API
-    from .api import api
-    api_blueprint = Blueprint('api', __name__)
-    api.init_app(api_blueprint)
-    app.register_blueprint(api_blueprint)
+    from .api import api_bp
+    # api_blueprint = Blueprint('api', __name__)
+    # api.init_app(api_blueprint)
+    # app.register_blueprint(api_blueprint)
+    app.register_blueprint(api_bp, url_prefix='/api')
+    
+    # 添加调试输出
+    print("已注册的路由:")
+    for rule in app.url_map.iter_rules():
+        print(f"{rule.endpoint}: {rule}")
     
     return app 
