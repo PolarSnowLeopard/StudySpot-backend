@@ -3,9 +3,7 @@ version: "3.8"
 services:
   # Flask应用服务
   studyspot-backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: polarsnowleopard/studyspot-backend:latest
     restart: always
     ports:
       - "8080:8080"

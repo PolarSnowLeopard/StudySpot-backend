@@ -46,9 +46,9 @@ jobs:
       event: push, merge_request
     steps:
       - run: |
-          docker login -u ${SWR_USER} -p ${SWR_PASSWORD} swr.cn-north-4.myhuaweicloud.com
-          docker build -t swr.cn-north-4.myhuaweicloud.com/${SWR_ORG}/studyspot-backend:latest .
-          docker push swr.cn-north-4.myhuaweicloud.com/${SWR_ORG}/studyspot-backend:latest
+          docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_TOKEN}
+          docker build -t ${DOCKERHUB_USERNAME}/studyspot-backend:latest .
+          docker push ${DOCKERHUB_USERNAME}/studyspot-backend:latest
         name: 构建并推送镜像
 
   deploy-production:
@@ -75,6 +75,7 @@ jobs:
           cp .env.example .env && \
           sed -i 's/\${PRODUCTION_DB_USERNAME}/${PRODUCTION_DB_USERNAME}/g' .env && \
           sed -i 's/\${PRODUCTION_DB_PASSWORD}/${PRODUCTION_DB_PASSWORD}/g' .env && \
+          sed -i 's/\${DOCKERHUB_USERNAME}/${DOCKERHUB_USERNAME}/g' .env && \
           sudo docker-compose pull && \
           sudo docker-compose up -d"
         name: 部署应用
