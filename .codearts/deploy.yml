@@ -15,6 +15,7 @@ variables:
 
 stages:
   - test
+  - build
   - deploy
 
 jobs:
@@ -34,14 +35,33 @@ jobs:
       - run: pytest app/tests/integration
         name: 集成测试
 
-  deploy-production:
-    stage: deploy
-    runs_on: linux
+      # - run: pytest tests/functional
+      #   name: 功能测试
+
+  build:
+    stage: build
+    runs_on: docker
+    image: docker:latest
     when:
       branch: [master]
       event: push, merge_request
     steps:
       - run: |
+          docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_TOKEN}
+          docker build -t ${DOCKERHUB_USERNAME}/studyspot-backend:latest .
+          docker push ${DOCKERHUB_USERNAME}/studyspot-backend:latest
+        name: 构建并推送镜像
+
+  deploy-production:
+    stage: deploy
+    runs_on: docker
+    image: docker:latest
+    when:
+      branch: [master]
+      event: push, merge_request
+    steps:
+      - run: |
+          apk add --no-cache openssh-client
           mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
@@ -50,15 +70,15 @@ jobs:
 
       - run: |
           ssh ${PRODUCTION_USERNAME}@${PRODUCTION_HOST} "mkdir -p ~/studyspot-backend"
-          scp -r . ${PRODUCTION_USERNAME}@${PRODUCTION_HOST}:~/studyspot-backend/
-        name: 传输项目文件
+          scp docker-compose.yml .env.example ${PRODUCTION_USERNAME}@${PRODUCTION_HOST}:~/studyspot-backend/
+        name: 传输配置文件
 
       - run: |
           ssh ${PRODUCTION_USERNAME}@${PRODUCTION_HOST} "cd ~/studyspot-backend && \
           cp .env.example .env && \
           sed -i 's/\${PRODUCTION_DB_USERNAME}/${PRODUCTION_DB_USERNAME}/g' .env && \
           sed -i 's/\${PRODUCTION_DB_PASSWORD}/${PRODUCTION_DB_PASSWORD}/g' .env && \
-          sudo docker build -t polarsnowleopard/studyspot-backend:latest . && \
-          sudo docker-compose down && \
+          sed -i 's/\${DOCKERHUB_USERNAME}/${DOCKERHUB_USERNAME}/g' .env && \
+          sudo docker-compose pull && \
           sudo docker-compose up -d"
-        name: 构建和部署应用
+        name: 部署应用
