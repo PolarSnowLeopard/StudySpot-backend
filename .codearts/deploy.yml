@@ -40,7 +40,8 @@ jobs:
 
   build:
     stage: build
-    runs_on: linux
+    runs_on: docker
+    image: docker:latest
     when:
       branch: [master]
       event: push, merge_request
@@ -53,12 +54,14 @@ jobs:
 
   deploy-production:
     stage: deploy
-    runs_on: linux
+    runs_on: docker
+    image: docker:latest
     when:
       branch: [master]
       event: push, merge_request
     steps:
       - run: |
+          apk add --no-cache openssh-client
           mkdir -p ~/.ssh
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
