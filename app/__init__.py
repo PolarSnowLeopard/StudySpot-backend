@@ -18,10 +18,6 @@ def create_app(config_name='dev'):
     db.init_app(app)
     jwt.init_app(app)
     
-    # 注册蓝图 - 传统路由（如果需要的话）
-    from .controllers import auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    
     # 初始化Restx API
     from .api import api
     api_blueprint = Blueprint('api', __name__)

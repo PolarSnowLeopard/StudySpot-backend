@@ -16,8 +16,9 @@ def success_response(data=None, message="success", code=200):
     
     if data is not None:
         response["data"] = data
-        
+
     return response
+        
 
 def error_response(message="error", code=400):
     """生成错误响应格式
