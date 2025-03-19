@@ -1,12 +1,15 @@
 from flask_restx import Api
+from flask import Blueprint
+
+api_bp = Blueprint('api', __name__)
 
 # 创建API实例
 api = Api(
+    app=api_bp,
     version='1.0',
     title='自习室预约系统API',
     description='自习室预约系统的RESTful API文档',
-    doc='/api/docs',
-    prefix='/api'
+    doc='/docs',
 )
 
 # 导入命名空间
