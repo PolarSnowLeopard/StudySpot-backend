@@ -29,6 +29,11 @@ def create_app(config_name='dev'):
     # app.register_blueprint(api_blueprint)
     app.register_blueprint(api_bp, url_prefix='/api')
     
+    # 设置定时任务
+    if config_name != 'test':  # 测试环境不启动定时任务
+        from .tasks import setup_qrcode_tasks
+        setup_qrcode_tasks(app)
+    
     # 添加调试输出
     print("已注册的路由:")
     for rule in app.url_map.iter_rules():

@@ -1,0 +1,1 @@
+from .qrcode_tasks import setup_qrcode_tasks 
