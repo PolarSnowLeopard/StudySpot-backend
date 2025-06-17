@@ -11,6 +11,11 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)  # 'student' 或 'admin'
     name = db.Column(db.String(100), nullable=False)
     avatar = db.Column(db.String(255), nullable=True)
+    
+    # 新增字段
+    violation_count = db.Column(db.Integer, default=0)
+    banned_until = db.Column(db.DateTime, nullable=True) # 禁用预约的截止时间
+    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -33,5 +38,7 @@ class User(db.Model):
             'username': self.username,
             'role': self.role,
             'name': self.name,
-            'avatar': self.avatar
-        } 
+            'avatar': self.avatar,
+            'violation_count': self.violation_count,
+            'banned_until': self.banned_until.isoformat() if self.banned_until else None
+        }

@@ -20,8 +20,8 @@ class AuthService:
         
         # 验证用户存在且密码正确
         if user and user.check_password(password):
-            # 创建JWT令牌
-            access_token = create_access_token(identity=user.id)
+            # 创建JWT令牌，确保 identity 是字符串
+            access_token = create_access_token(identity=str(user.id))
             
             # 返回用户信息和令牌
             return {
@@ -68,8 +68,8 @@ class AuthService:
             db.session.add(new_user)
             db.session.commit()
             
-            # 创建JWT令牌
-            access_token = create_access_token(identity=new_user.id)
+            # 创建JWT令牌，确保 identity 是字符串
+            access_token = create_access_token(identity=str(new_user.id))
             
             # 返回用户信息和令牌
             return {
@@ -95,4 +95,4 @@ class AuthService:
         # JWT是无状态的，服务端不需要做特殊处理
         # 如果需要实现服务端登出，可以使用token黑名单等方式
         
-        return True 
+        return True

@@ -1,4 +1,3 @@
-# app/tests/unit/test_check_in_api.py
 import pytest
 import json
 from flask import Flask
@@ -63,7 +62,7 @@ class TestCheckInAPI:
         """创建学生的JWT令牌"""
         with app.app_context():
             student = User.query.filter_by(username='test_student').first()
-            # 将student.id转为字符串
+            # 修正点: 将 student.id 转为字符串
             token = create_access_token(identity=str(student.id))
             return token
     
@@ -106,7 +105,7 @@ class TestCheckInAPI:
             # 验证响应
             data = json.loads(response.data)
             assert response.status_code == 200
-            assert data['code'] == 200  # 使用正确的成功状态码
+            assert data['code'] == 200
             assert data['message'] == '签到成功'
             assert 'data' in data
             assert 'check_in_id' in data['data']
@@ -132,5 +131,5 @@ class TestCheckInAPI:
             # 验证响应
             data = json.loads(response.data)
             assert response.status_code == 400
-            assert data['code'] == 400  # 错误状态码
+            assert data['code'] == 400
             assert '无效的二维码格式' in data['message']
