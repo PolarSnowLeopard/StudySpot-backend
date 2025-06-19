@@ -1,4 +1,6 @@
 from datetime import datetime
+from symtable import Class
+
 from .db import db
 
 class StudyRoom(db.Model):
@@ -35,4 +37,6 @@ class StudyRoom(db.Model):
             'admin_id': self.admin_id,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
-        } 
+        }
+
+
