@@ -1,11 +1,10 @@
 from datetime import datetime
 from flask import current_app
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler # 不再需要在这里创建
 from ..models import StudyRoom, QRCode
 from ..services import QRCodeService
 
-# 创建调度器
-scheduler = BackgroundScheduler()
+# scheduler = BackgroundScheduler() # 删除这行
 
 def refresh_expired_qrcodes():
     """刷新所有过期的二维码"""
@@ -29,7 +28,8 @@ def refresh_expired_qrcodes():
                 except Exception as e:
                     current_app.logger.error(f"刷新自习室 {room.name} 的二维码失败: {str(e)}")
 
-def setup_qrcode_tasks(app):
+
+def setup_qrcode_tasks(app, scheduler): # 接收 scheduler 作为参数
     """设置二维码相关的定时任务"""
     # 每分钟检查并刷新过期的二维码
     scheduler.add_job(
@@ -39,9 +39,7 @@ def setup_qrcode_tasks(app):
         id='refresh_qrcodes'
     )
     
-    # 启动调度器
-    scheduler.start()
-    
-    # 确保应用终止时停止调度器
-    import atexit
-    atexit.register(lambda: scheduler.shutdown()) 
+    # 不再需要在这里启动和注册停止函数，已移到 app/__init__.py
+    # scheduler.start()
+    # import atexit
+    # atexit.register(lambda: scheduler.shutdown())
