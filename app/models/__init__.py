@@ -4,3 +4,5 @@ from .qrcode import QRCode
 from .check_in import CheckIn
 from .time_slot import TimeSlot
 from .study_seat import Seat
+
+from .db import db

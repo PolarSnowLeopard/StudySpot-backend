@@ -1,8 +1,9 @@
 # 处理学生侧的核心逻辑，例如搜索可预约时间块等
 from typing import List
 from app.schemas.search_schema import ReservationOut, AvailableSlot
-from app.models import StudyRoom, TimeSlot, db, Seat
+from app.models import StudyRoom, TimeSlot, Seat
 from datetime import datetime, timedelta
+from ..models import db
 
 class StudentService:
 
@@ -38,6 +39,11 @@ class StudentService:
         if end_time - start_time > MAX_RESERVATION_DURATION:
             return {"success": False, "message": "预约时长不能超过2小时"}
 
+        # 是否有这个座位
+        seat = Seat.query.get(seat_id)
+        if not seat:
+            return {"success": False, "message": "座位不存在"}
+
         # 检查该座位是否已被预约（重叠时间）
         conflict = TimeSlot.query.filter(
             TimeSlot.seat_id == seat_id,
@@ -62,6 +68,7 @@ class StudentService:
 
         # 查找是否已有这个 slot（可精确查 start/end），否则创建新的 TimeSlot
         slot = TimeSlot.query.filter_by(
+            room_id=seat.room_id,
             seat_id=seat_id,
             start_time=start_time,
             end_time=end_time
@@ -69,9 +76,10 @@ class StudentService:
 
         if not slot:
             # 如果没有现成的时间块，创建新的（也可以不允许）
+
             slot = TimeSlot(
                 seat_id=seat_id,
-                room_id=None,  # 若 seat 与 room 有关系，可自动填充
+                room_id=seat.room_id,  # 若 seat 与 room 有关系，可自动填充
                 start_time=start_time,
                 end_time=end_time
             )
