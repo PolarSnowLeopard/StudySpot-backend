@@ -5,6 +5,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from .models.db import db
 from flask_cors import CORS
+from flask_migrate import Migrate
 from config import config_by_name
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -14,6 +15,7 @@ def create_app(config_name='dev'):
     
     # 初始化扩展
     db.init_app(app)
+    migrate = Migrate(app, db)
     JWTManager(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
     

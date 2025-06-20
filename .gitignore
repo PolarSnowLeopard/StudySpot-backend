@@ -1,4 +1,7 @@
 .env
+migrations/
+.pytest_cache/
+.coverage
 
 # python cache
 **/__pycache__
