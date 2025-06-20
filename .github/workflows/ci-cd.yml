@@ -4,7 +4,7 @@ name: Flask Backend CI/CD
 on:
   push:
     branches:
-      - maste
+      - master
 
 # 环境变量
 env:
